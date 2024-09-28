@@ -22,7 +22,7 @@ for i in range(len(array1)):
     print()
 print()
 
-# Сложени матриц
+# Сложение матриц
 result = []
 for i in range(len(array)):
     row = []
