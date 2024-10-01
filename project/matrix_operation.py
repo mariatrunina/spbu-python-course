@@ -67,10 +67,10 @@ def transpose(matrix):
 
     Returns:
         List[List[float]]: Транспонированная матрица.
-        
+
     Если входная матрица пустая, возвращает пустую матрицу.
     """
-    if not matrix:  
+    if not matrix:
         return []
 
     return [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]

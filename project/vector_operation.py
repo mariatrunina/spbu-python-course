@@ -2,7 +2,7 @@ import math
 
 
 def dot_product(a, b):
-     """Вычисляет скалярное произведение двух векторов.
+    """Вычисляет скалярное произведение двух векторов.
 
     Args:
         a (List[float]): Первый вектор.
@@ -10,12 +10,11 @@ def dot_product(a, b):
 
     Returns:
         float: Скалярное произведение векторов a и b.
-    
+
     Raises:
         ValueError: Если длины векторов a и b не совпадают.
     """
-     return sum(x * y for x, y in zip(a, b))
-
+    return sum(x * y for x, y in zip(a, b))
 
 
 def vector_length(c):
