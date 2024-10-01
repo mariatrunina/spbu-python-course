@@ -2,14 +2,48 @@ import math
 
 
 def dot_product(a, b):
-    return sum(x * y for x, y in zip(a, b))
+     """Вычисляет скалярное произведение двух векторов.
+
+    Args:
+        a (List[float]): Первый вектор.
+        b (List[float]): Второй вектор.
+
+    Returns:
+        float: Скалярное произведение векторов a и b.
+    
+    Raises:
+        ValueError: Если длины векторов a и b не совпадают.
+    """
+     return sum(x * y for x, y in zip(a, b))
+
 
 
 def vector_length(c):
+    """Вычисляет длину (модуль) вектора.
+
+    Args:
+        c (List[float]): Вектор.
+
+    Returns:
+        float: Длина вектора c.
+    """
     return math.sqrt(dot_product(c, c))
 
 
 def angle_between_vectors(a, b, verbose=False):
+    """Вычисляет угол между двумя векторами в радианах.
+
+    Args:
+        a (List[float]): Первый вектор.
+        b (List[float]): Второй вектор.
+        verbose (bool): Если True, выводит дополнительную информацию.
+
+    Returns:
+        float: Угол между векторами a и b в радианах.
+
+    Raises:
+        ValueError: Если один из векторов является нулевым.
+    """
     len_a = vector_length(a)
     len_b = vector_length(b)
 
