@@ -9,6 +9,7 @@ from project.matrix_operation import (
     transpose,
 )
 
+
 def test_add_matrices():
     # Обычное сложения
     matrix1 = [[1, 2], [3, 4]]
@@ -28,6 +29,7 @@ def test_add_matrices():
     expected_result = [[0, 0], [0, 0]]
     assert add_matrices(matrix1, matrix2) == expected_result
 
+
 def test_multiply_matrices():
     # Обычное умножение
     matrix1 = [[1, 2], [3, 4]]
@@ -45,6 +47,7 @@ def test_multiply_matrices():
     expected_result = [[0, 0], [0, 0]]
     assert multiply_matrices(matrix1, zero_matrix) == expected_result
 
+
 def test_transpose():
     # Тест для обычной матрицы
     matrix = [[1, 2, 3], [4, 5, 6]]
@@ -60,16 +63,18 @@ def test_transpose():
     identity_matrix = [[1]]
     assert transpose(identity_matrix) == identity_matrix
 
+
 def test_add_empty_matrices():
     empty_matrix1 = []
     empty_matrix2 = []
-    
+
     with pytest.raises(ValueError):
         add_matrices(empty_matrix1, empty_matrix2)
 
+
 def test_transpose_empty_matrix():
     empty_matrix = []
-    
+
     assert transpose(empty_matrix) == []
 
 
