@@ -1,6 +1,5 @@
 def add_matrices(matrix1, matrix2):
-    """
-    Складывает две матрицы одинаковых размеров.
+    """Складывает две матрицы одинаковых размеров.
 
     Args:
         matrix1 (List[List[float]]): Первая матрица.
@@ -30,8 +29,7 @@ def add_matrices(matrix1, matrix2):
 
 
 def multiply_matrices(matrix1, matrix2):
-    """
-    Умножает две матрицы.
+    """Умножает две матрицы.
 
     Args:
         matrix1 (List[List[float]]): Первая матрица.
@@ -59,8 +57,7 @@ def multiply_matrices(matrix1, matrix2):
 
 
 def transpose(matrix):
-    """
-    Транспонирует матрицу.
+    """Транспонирует матрицу.
 
     Args:
         matrix (List[List[float]]): Исходная матрица.
