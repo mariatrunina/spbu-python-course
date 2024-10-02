@@ -1,15 +1,15 @@
 def add_matrices(matrix1, matrix2):
-    """Складывает две матрицы одинаковых размеров.
+    """Adds two matrices of the same size.
 
     Args:
-        matrix1 (List[List[float]]): Первая матрица.
-        matrix2 (List[List[float]]): Вторая матрица.
+        matrix1 (List[List[float]]): The first matrix.
+        matrix2 (List[List[float]]): Second matrix.
 
     Raises:
-        ValueError: Если матрицы имеют разные размеры или пустые.
+        ValueError: If the matrices have different sizes or are empty.
 
     Returns:
-        List[List[float]]: Результирующая матрица, являющаяся суммой matrix1 и matrix2.
+        List[List[float]]: The resulting matrix, which is the sum of matrix1 and matrix2.
     """
     if (
         not matrix1
@@ -29,17 +29,17 @@ def add_matrices(matrix1, matrix2):
 
 
 def multiply_matrices(matrix1, matrix2):
-    """Умножает две матрицы.
+    """Multiplies two matrices.
 
     Args:
-        matrix1 (List[List[float]]): Первая матрица.
-        matrix2 (List[List[float]]): Вторая матрица.
+        matrix1 (List[List[float]]): The first matrix.
+        matrix2 (List[List[float]]): Second matrix.
 
     Raises:
-        ValueError: Если одна из матриц пустая или если они несовместимы для умножения.
+        ValueError: If one of the matrices is empty or if they are incompatible for multiplication.
 
     Returns:
-        List[List[float]]: Результирующая матрица, являющаяся произведением matrix1 и matrix2.
+        List[List[float]]: The resulting matrix, which is the product of matrix1 and matrix2.
     """
     if not matrix1 or not matrix2:
         raise ValueError("Матрицы не могут быть пустыми.")
@@ -57,15 +57,15 @@ def multiply_matrices(matrix1, matrix2):
 
 
 def transpose(matrix):
-    """Транспонирует матрицу.
+    """Transposes a matrix.
 
     Args:
-        matrix (List[List[float]]): Исходная матрица.
+        matrix (List[List[float]]): The original matrix.
 
     Returns:
-        List[List[float]]: Транспонированная матрица.
+        List[List[float]]: Transposed matrix.
 
-    Если входная матрица пустая, возвращает пустую матрицу.
+    If the input matrix is ​​empty, returns an empty matrix.
     """
     if not matrix:
         return []
