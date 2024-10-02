@@ -2,64 +2,64 @@ import math
 
 
 def dot_product(a, b):
-    """Вычисляет скалярное произведение двух векторов.
+    """Calculates the dot product of two vectors.
 
     Args:
-        a (List[float]): Первый вектор.
-        b (List[float]): Второй вектор.
+        a (List[float]): The first vector.
+        b (List[float]): The second vector.
 
     Returns:
-        float: Скалярное произведение векторов a и b.
+        float: The dot product of vectors a and b.
 
     Raises:
-        ValueError: Если длины векторов a и b не совпадают.
+        ValueError: If the lengths of vectors a and b do not match.
     """
     return sum(x * y for x, y in zip(a, b))
 
 
 def vector_length(c):
-    """Вычисляет длину (модуль) вектора.
+    """Calculates the length (magnitude) of a vector.
 
     Args:
-        c (List[float]): Вектор.
+        c (List[float]): The vector.
 
     Returns:
-        float: Длина вектора c.
+        float: The length of vector c.
     """
     return math.sqrt(dot_product(c, c))
 
 
 def angle_between_vectors(a, b, verbose=False):
-    """Вычисляет угол между двумя векторами в радианах.
+    """Calculates the angle between two vectors in radians.
 
     Args:
-        a (List[float]): Первый вектор.
-        b (List[float]): Второй вектор.
-        verbose (bool): Если True, выводит дополнительную информацию.
+        a (List[float]): The first vector.
+        b (List[float]): The second vector.
+        verbose (bool): If True, prints additional information.
 
     Returns:
-        float: Угол между векторами a и b в радианах.
+        float: The angle between vectors a and b in radians.
 
     Raises:
-        ValueError: Если один из векторов является нулевым.
+        ValueError: If either vector is zero.
     """
     len_a = vector_length(a)
     len_b = vector_length(b)
 
-    # Проверка на нулевые векторы
+    # Check for zero vectors
     if len_a == 0 or len_b == 0:
-        raise ValueError("Один из векторов является нулевым.")
+        raise ValueError("One of the vectors is zero.")
 
     if verbose:
-        print(f"Длина векторов: a={len_a}, b={len_b}")
+        print(f"Lengths of vectors: a={len_a}, b={len_b}")
 
     cos_theta = dot_product(a, b) / (len_a * len_b)
     cos_theta = max(-1, min(1, cos_theta))
     if verbose:
-        print(f"Косинус угла: {cos_theta}")
+        print(f"Cosine of the angle: {cos_theta}")
     angle = math.acos(cos_theta)
 
     if verbose:
-        print(f"Угол (в радианах): {angle}")
+        print(f"Angle (in radians): {angle}")
 
     return angle
