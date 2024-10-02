@@ -47,6 +47,15 @@ def test_multiply_matrices():
     expected_result = [[0, 0], [0, 0]]
     assert multiply_matrices(matrix1, zero_matrix) == expected_result
 
+    matrix5 = [[1, 2], [3, 4]]
+    matrix6 = [[5, 6]]
+
+    try:
+        multiply_matrices(matrix5, matrix6)
+        assert False, "Expected ValueError for incompatible matrices"
+    except ValueError:
+        pass
+
 
 def test_transpose():
     # Тест для обычной матрицы

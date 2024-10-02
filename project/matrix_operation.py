@@ -29,17 +29,17 @@ def add_matrices(matrix1, matrix2):
 
 
 def multiply_matrices(matrix1, matrix2):
-    """Multiplies two matrices.
+    """Умножает две матрицы.
 
     Args:
-        matrix1 (List[List[float]]): The first matrix.
-        matrix2 (List[List[float]]): Second matrix.
+        matrix1 (List[List[float]]): Первая матрица.
+        matrix2 (List[List[float]]): Вторая матрица.
 
     Raises:
-        ValueError: If one of the matrices is empty or if they are incompatible for multiplication.
+        ValueError: Если одна из матриц пустая или если они несовместимы для умножения.
 
     Returns:
-        List[List[float]]: The resulting matrix, which is the product of matrix1 and matrix2.
+        List[List[float]]: Результирующая матрица, являющаяся произведением matrix1 и matrix2.
     """
     if not matrix1 or not matrix2:
         raise ValueError("Матрицы не могут быть пустыми.")
