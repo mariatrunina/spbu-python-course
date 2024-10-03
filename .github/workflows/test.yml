@@ -46,9 +46,7 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip list
 
-      # Install pre-commit from .pre-commit-config.yaml
+      # Test with run_tests script
       - name: Test with run_tests script
         run: |
           python scripts/run_tests.py
-
-
