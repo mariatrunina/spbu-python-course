@@ -1,9 +1,7 @@
 from typing import List
 
-
 def add_matrices(
-    matrix1: List[List[float]], matrix2: List[List[float]]
-) -> List[List[float]]:
+    matrix1: List[List[float]], matrix2: List[List[float]]) -> List[List[float]]:
     """Adds two matrices of the same size.
 
     Args:
@@ -34,8 +32,7 @@ def add_matrices(
 
 
 def multiply_matrices(
-    matrix1: List[List[float]], matrix2: List[List[float]]
-) -> List[List[float]]:
+    matrix1: List[List[float]], matrix2: List[List[float]]) -> List[List[float]]:
     """Multiplies two matrices.
 
     Args:
@@ -54,7 +51,7 @@ def multiply_matrices(
     if len(matrix1[0]) != len(matrix2):
         raise ValueError("Несовместимые матрицы для умножения.")
 
-    result = [[0 for _ in range(len(matrix2[0]))] for _ in range(len(matrix1))]
+    result = [[0.0 for _ in range(len(matrix2[0]))] for _ in range(len(matrix1))]
     for i in range(len(matrix1)):
         for j in range(len(matrix2[0])):
             for k in range(len(matrix2)):
@@ -77,4 +74,4 @@ def transpose(matrix: List[List[float]]) -> List[List[float]]:
     if not matrix:
         return []
 
-    return [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]
+    return [[float(matrix[j][i]) for j in range(len(matrix))] for i in range(len(matrix[0]))]
