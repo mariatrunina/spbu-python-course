@@ -1,7 +1,8 @@
 import math
+from typing import List
 
 
-def dot_product(a, b):
+def dot_product(a: List[float], b: List[float]) -> float:
     """Calculates the dot product of two vectors.
 
     Args:
@@ -14,10 +15,13 @@ def dot_product(a, b):
     Raises:
         ValueError: If the lengths of vectors a and b do not match.
     """
+    if len(a) != len(b):
+        raise ValueError("Vectors must have the same length.")
+
     return sum(x * y for x, y in zip(a, b))
 
 
-def vector_length(c):
+def vector_length(c: List[float]) -> float:
     """Calculates the length (magnitude) of a vector.
 
     Args:
@@ -29,7 +33,9 @@ def vector_length(c):
     return math.sqrt(dot_product(c, c))
 
 
-def angle_between_vectors(a, b, verbose=False):
+def angle_between_vectors(
+    a: List[float], b: List[float], verbose: bool = False
+) -> float:
     """Calculates the angle between two vectors in radians.
 
     Args:
@@ -54,9 +60,13 @@ def angle_between_vectors(a, b, verbose=False):
         print(f"Lengths of vectors: a={len_a}, b={len_b}")
 
     cos_theta = dot_product(a, b) / (len_a * len_b)
+
+    # Clamping the cosine value to avoid domain errors in acos
     cos_theta = max(-1, min(1, cos_theta))
+
     if verbose:
         print(f"Cosine of the angle: {cos_theta}")
+
     angle = math.acos(cos_theta)
 
     if verbose:

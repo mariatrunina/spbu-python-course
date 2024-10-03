@@ -1,9 +1,14 @@
-def add_matrices(matrix1, matrix2):
+from typing import List
+
+
+def add_matrices(
+    matrix1: List[List[float]], matrix2: List[List[float]]
+) -> List[List[float]]:
     """Adds two matrices of the same size.
 
     Args:
         matrix1 (List[List[float]]): The first matrix.
-        matrix2 (List[List[float]]): Second matrix.
+        matrix2 (List[List[float]]): The second matrix.
 
     Raises:
         ValueError: If the matrices have different sizes or are empty.
@@ -28,18 +33,20 @@ def add_matrices(matrix1, matrix2):
     return result
 
 
-def multiply_matrices(matrix1, matrix2):
-    """Умножает две матрицы.
+def multiply_matrices(
+    matrix1: List[List[float]], matrix2: List[List[float]]
+) -> List[List[float]]:
+    """Multiplies two matrices.
 
     Args:
-        matrix1 (List[List[float]]): Первая матрица.
-        matrix2 (List[List[float]]): Вторая матрица.
+        matrix1 (List[List[float]]): The first matrix.
+        matrix2 (List[List[float]]): The second matrix.
 
     Raises:
-        ValueError: Если одна из матриц пустая или если они несовместимы для умножения.
+        ValueError: If either matrix is empty or if they are incompatible for multiplication.
 
     Returns:
-        List[List[float]]: Результирующая матрица, являющаяся произведением matrix1 и matrix2.
+        List[List[float]]: The resulting matrix, which is the product of matrix1 and matrix2.
     """
     if not matrix1 or not matrix2:
         raise ValueError("Матрицы не могут быть пустыми.")
@@ -56,7 +63,7 @@ def multiply_matrices(matrix1, matrix2):
     return result
 
 
-def transpose(matrix):
+def transpose(matrix: List[List[float]]) -> List[List[float]]:
     """Transposes a matrix.
 
     Args:
