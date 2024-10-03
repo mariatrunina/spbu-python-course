@@ -49,6 +49,6 @@ jobs:
       # Install pre-commit from .pre-commit-config.yaml
       - name: Check types with mypy
         run: mypy project
-          
 
-      
+
+
