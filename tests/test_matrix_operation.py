@@ -63,6 +63,7 @@ def test_multiply_matrices():
     except ValueError:
         pass
 
+
 def test_transpose():
     # Тест для обычной матрицы
     matrix = [[1, 2, 3], [4, 5, 6]]
