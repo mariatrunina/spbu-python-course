@@ -46,6 +46,6 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip list
 
-      # Check types with mypy 
+      # Check types with mypy
       - name: Check types with mypy
         run: mypy project
