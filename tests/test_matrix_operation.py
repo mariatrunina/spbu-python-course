@@ -47,6 +47,13 @@ def test_multiply_matrices():
     expected_result = [[0, 0], [0, 0]]
     assert multiply_matrices(matrix1, zero_matrix) == expected_result
 
+    # Умножение неквадратных матриц
+    matrix3 = [[1, 2, 3], [4, 5, 6]]
+    matrix4 = [[7, 8], [9, 10], [11, 12]]
+    expected_result = [[58, 64], [139, 154]]  # Результат умножения
+    assert multiply_matrices(matrix3, matrix4) == expected_result
+
+    # Проверка на несовместимые размеры
     matrix5 = [[1, 2], [3, 4]]
     matrix6 = [[5, 6]]
 

@@ -33,14 +33,17 @@ def add_matrices(
     return result
 
 
+from typing import List
+
+
 def multiply_matrices(
     matrix1: List[List[float]], matrix2: List[List[float]]
 ) -> List[List[float]]:
     """Multiplies two matrices.
 
     Args:
-        matrix1 (List[List[float]]): The first matrix.
-        matrix2 (List[List[float]]): The second matrix.
+        matrix1 (List[List[float]]): The first matrix to be multiplied.
+        matrix2 (List[List[float]]): The second matrix to be multiplied.
 
     Raises:
         ValueError: If either matrix is empty or if they are incompatible for multiplication.
@@ -48,13 +51,19 @@ def multiply_matrices(
     Returns:
         List[List[float]]: The resulting matrix, which is the product of matrix1 and matrix2.
     """
+
+    # Check if either matrix is empty
     if not matrix1 or not matrix2:
-        raise ValueError("Матрицы не могут быть пустыми.")
+        raise ValueError("Matrices cannot be empty.")
 
+    # Check for compatibility of matrices for multiplication
     if len(matrix1[0]) != len(matrix2):
-        raise ValueError("Несовместимые матрицы для умножения.")
+        raise ValueError("Incompatible matrices for multiplication.")
 
+    # Initialize the result matrix with zeros
     result = [[0.0 for _ in range(len(matrix2[0]))] for _ in range(len(matrix1))]
+
+    # Perform matrix multiplication
     for i in range(len(matrix1)):
         for j in range(len(matrix2[0])):
             for k in range(len(matrix2)):
