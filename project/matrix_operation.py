@@ -1,9 +1,6 @@
 from typing import List
 
-
-def add_matrices(
-    matrix1: List[List[float]], matrix2: List[List[float]]
-) -> List[List[float]]:
+def add_matrices(matrix1: List[List[float]], matrix2: List[List[float]]) -> List[List[float]]:
     """Adds two matrices of the same size.
 
     Args:
@@ -33,9 +30,7 @@ def add_matrices(
     return result
 
 
-def multiply_matrices(
-    matrix1: List[List[float]], matrix2: List[List[float]]
-) -> List[List[float]]:
+def multiply_matrices(matrix1: List[List[float]], matrix2: List[List[float]]) -> List[List[float]]:
     """Multiplies two matrices.
 
     Args:
