@@ -31,7 +31,7 @@ def cache_result(
     """
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
-        # Specify type for cache
+
         cache: OrderedDict[Tuple[Any, frozenset], Any] = OrderedDict()
 
         def wrapper(*args: Any, **kwargs: Any) -> Any:
