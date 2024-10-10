@@ -26,20 +26,16 @@ def curry_explicit(function: Callable, arity: int) -> Callable:
     return curried
 
 
-def uncurry_explicit(func: Callable, arity: int) -> Callable:
+def uncurry_explicit(curried_function: Callable, arity: int) -> Callable:
     if arity < 0:
         raise ValueError("Arity cannot be negative.")
-
-    # Обработка функций с нулевой арностью
-    if arity == 0:
-        return func()  # Здесь вызываем функцию для получения результата
 
     def uncurried(*args):
         if len(args) != arity:
             raise TypeError(
-                f"Function expected exactly {arity} arguments, got {len(args)}."
+                f"Function takes exactly {arity} arguments but got {len(args)}."
             )
 
-        return func(*args)
+        return curried_function(*args)
 
     return uncurried
