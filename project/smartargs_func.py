@@ -1,7 +1,5 @@
 import inspect
 import copy
-import pytest
-import random
 
 
 # Определяем классы Evaluated и Isolated
@@ -14,7 +12,7 @@ class Isolated:
     pass
 
 
-# Ваш декоратор
+# Декоратор smart_args
 def smart_args(func):
     signature = inspect.signature(func)
 
@@ -37,7 +35,7 @@ def smart_args(func):
                 ), "Cannot use both Evaluated and Isolated together."
 
                 if isinstance(default, Evaluated):
-                    final_args[name] = default.func()
+                    final_args[name] = default.func()  # Вызываем функцию
                 elif isinstance(default, Isolated):
                     assert name in kwargs, f"Argument '{name}' must be provided."
                     final_args[name] = copy.deepcopy(kwargs[name])
@@ -47,3 +45,22 @@ def smart_args(func):
         return func(**final_args)
 
     return wrapper
+
+
+# Функция для проверки изоляции
+def check_isolation(d):
+    isolated_dict = copy.deepcopy(d)
+    isolated_dict["a"] = 0
+    return isolated_dict
+
+
+@smart_args
+def example_function(a=0, b=Evaluated(lambda: 1), c=Isolated):
+    # Проверяем, является ли c экземпляром Isolated и обрабатываем соответствующим образом
+    if isinstance(c, Isolated):
+        c = {}  # По умолчанию используем пустой словарь, если не предоставлен
+
+    # Используем b.func() только если b является экземпляром Evaluated
+    b_value = b.func() if isinstance(b, Evaluated) else b
+
+    return a + b_value + (c["a"] if isinstance(c, dict) else 0)
