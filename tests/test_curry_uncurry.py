@@ -43,7 +43,7 @@ def test_uncurry_incorrect_number_of_arguments():
 def test_curry_zero_arity():
     """Тестирование функции с нулевой арностью"""
     f0 = curry_explicit(lambda: 42, 0)
-    
+
     assert f0() == 42
 
 
