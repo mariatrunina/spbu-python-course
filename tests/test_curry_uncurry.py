@@ -1,5 +1,4 @@
 import pytest
-import pytest
 import sys
 import os
 
@@ -43,17 +42,16 @@ def test_uncurry_incorrect_number_of_arguments():
 
 def test_curry_zero_arity():
     """Тестирование функции с нулевой арностью"""
-    f0 = curry_explicit(lambda: "No arguments", 0)
-
-    assert f0() == "No arguments"
+    f0 = curry_explicit(lambda: 42, 0)
+    
+    assert f0() == 42
 
 
 def test_uncurry_zero_arity():
-
-    f0 = curry_explicit(lambda: "No arguments", 0)
+    f0 = curry_explicit(lambda: 42, 0)
     g0 = uncurry_explicit(f0, 0)
 
-    assert g0() == "No arguments"
+    assert g0() == 42
 
 
 if __name__ == "__main__":
