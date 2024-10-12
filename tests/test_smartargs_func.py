@@ -6,9 +6,9 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from project.smartargs_func import (
     smart_args,
+    Evaluated,
     check_isolation,
     example_function,
-    Evaluated,
     Isolated,
 )
 

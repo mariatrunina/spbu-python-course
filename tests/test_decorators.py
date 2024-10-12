@@ -72,7 +72,8 @@ def test_cache_limit():
 
     assert multiply(1, 2) == 2
     assert multiply(2, 3) == 6
-    assert multiply(3, 4) == 12
+    assert multiply(3, 4) == 12  # Это удалит (1,2)
+
     # Проверяем, что кэш не содержит (1, 2)
     assert multiply(1, 2) == 2  # Должно быть пересчитано
 
