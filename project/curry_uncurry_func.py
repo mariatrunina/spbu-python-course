@@ -89,10 +89,3 @@ def uncurry_explicit(curried_function: Callable[..., Any], arity: int) -> Callab
         return curried_function(*args)
 
     return uncurried
-
-
-
-
-
-
-
