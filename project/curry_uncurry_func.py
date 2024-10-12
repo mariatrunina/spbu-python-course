@@ -3,7 +3,7 @@ from typing import Callable, Any
 
 def curry_explicit(function: Callable[..., Any], arity: int) -> Callable:
     """
-    Curries a function with a specified arity.
+    Curries a function with an ariaty
 
     This function transforms a regular function into a curried version,
     allowing it to be called with fewer arguments than it expects.
