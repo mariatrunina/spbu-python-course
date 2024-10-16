@@ -4,12 +4,7 @@ from typing import Callable, Any, Dict
 
 
 class Evaluated:
-    """
-    A class that wraps a function to be evaluated when called.
-
-    Attributes:
-        func (Callable): The function to be evaluated.
-    """
+    """A class that wraps a function to be evaluated when called."""
 
     def __init__(self, func: Callable[[], Any]):
         self.func = func
@@ -22,19 +17,7 @@ class Isolated:
 
 
 def smart_args(func: Callable) -> Callable:
-    """
-    A decorator that processes keyword arguments for a function,
-    handling default values that may be instances of Evaluated or Isolated.
-
-    Args:
-        func (Callable): The function to be decorated.
-
-    Returns:
-        Callable: A wrapper function that processes the arguments.
-
-    Raises:
-        AssertionError: If an invalid argument is provided or if both Evaluated and Isolated are used together.
-    """
+    """A decorator that processes keyword arguments for a function."""
     signature = inspect.signature(func)
 
     def wrapper(**kwargs: Any) -> Any:
@@ -68,44 +51,13 @@ def smart_args(func: Callable) -> Callable:
     return wrapper
 
 
-def check_isolation(d: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Checks isolation of a dictionary by creating a deep copy and modifying it.
-
-    Args:
-        d (Dict[str, Any]): The dictionary to check.
-
-    Returns:
-        Dict[str, Any]: A new dictionary with modified values.
-    """
-    isolated_dict = copy.deepcopy(d)
-    isolated_dict["a"] = 0
-    return isolated_dict
-
-
 @smart_args
 def example_function(
-    a: int = 0, b: Evaluated = Evaluated(lambda: 1), c: Any = Isolated
+    a: int = 0, b: Evaluated = Evaluated(lambda: 1), c: Any = Isolated()
 ) -> int:
-    """
-    An example function demonstrating the use of smart_args.
-
-    Args:
-        a (int): An integer value (default is 0).
-        b (Evaluated): An instance of Evaluated (default evaluates to 1).
-        c (Any): An instance of Isolated or a dictionary (default is an instance of Isolated).
-
-    Returns:
-        int: The sum of a, the evaluated value of b, and the value of c["a"] if c is a dictionary.
-
-    Raises:
-        TypeError: If c is an instance of Isolated and not provided as an argument.
-    """
-
     if isinstance(c, Isolated):
-        c = {}  # Use an empty dictionary by default if not provided
+        c = {}  # Инициализируем c как пустой словарь
 
-    # Use b.func() only if b is an instance of Evaluated
     b_value = b.func() if isinstance(b, Evaluated) else b
 
-    return a + b_value + (c["a"] if isinstance(c, dict) else 0)
+    return a + b_value + (c.get("a", 0) if isinstance(c, dict) else 0)
