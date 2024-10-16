@@ -2,6 +2,7 @@ from typing import Generator, Tuple
 
 COMBINATION_LIMIT = 256 * 256 * 256 * 51
 
+
 def fetch_rgba_by_index(idx: int) -> Tuple[int, int, int, int]:
     """
     Retrieves RGBA color by the given index.
@@ -24,6 +25,7 @@ def fetch_rgba_by_index(idx: int) -> Tuple[int, int, int, int]:
     alpha_channel = (idx % 51) * 2
 
     return red_channel, green_channel, blue_channel, alpha_channel
+
 
 def prime_number_generator(max_count: int = 10000) -> Generator[int, None, None]:
     """
@@ -50,6 +52,7 @@ def prime_number_generator(max_count: int = 10000) -> Generator[int, None, None]
             del is_prime[current]
         current += 1
 
+
 def prime_decorator(func):
     """
     Decorator that returns the k-th prime number.
@@ -60,6 +63,7 @@ def prime_decorator(func):
     Returns:
         Callable[[int], int]: Wrapped function that returns the k-th prime number.
     """
+
     def inner(k: int) -> int:
         if k < 1:
             raise ValueError("Index must be a positive integer.")
@@ -70,10 +74,11 @@ def prime_decorator(func):
         for index_counter, prime in enumerate(generator_instance, start=1):
             if index_counter == k:
                 return prime
-        
+
         raise ValueError("Prime number not found at the specified position.")
 
     return inner
+
 
 @prime_decorator
 def get_kth_prime_number() -> Generator[int, None, None]:
