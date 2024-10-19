@@ -1,5 +1,7 @@
 from typing import Generator, Tuple
 
+
+# Константа для лимита RGBA
 COMBINATION_LIMIT = 256 * 256 * 256 * 51
 
 
@@ -27,29 +29,22 @@ def fetch_rgba_by_index(idx: int) -> Tuple[int, int, int, int]:
     return red_channel, green_channel, blue_channel, alpha_channel
 
 
-def prime_number_generator(max_count: int = 10000) -> Generator[int, None, None]:
+def prime_number_generator() -> Generator[int, None, None]:
     """
-    Generator to produce prime numbers.
-
-    Args:
-        max_count (int): Maximum number of prime numbers to generate.
+    Generator to produce prime numbers indefinitely.
 
     Yields:
         int: The next prime number.
     """
-    is_prime = {}
     current = 2
-    total_primes = 0
-
-    while total_primes < max_count:
-        if current not in is_prime:
+    while True:
+        is_prime = True
+        for i in range(2, int(current**0.5) + 1):
+            if current % i == 0:
+                is_prime = False
+                break
+        if is_prime:
             yield current
-            is_prime[current * current] = [current]
-            total_primes += 1
-        else:
-            for prime in is_prime[current]:
-                is_prime.setdefault(prime + current, []).append(prime)
-            del is_prime[current]
         current += 1
 
 
@@ -58,7 +53,7 @@ def prime_decorator(func):
     Decorator that returns the k-th prime number.
 
     Args:
-        func: Generator function to produce prime numbers.
+        func: A generator function to produce prime numbers.
 
     Returns:
         Callable[[int], int]: Wrapped function that returns the k-th prime number.
@@ -70,12 +65,11 @@ def prime_decorator(func):
         if not isinstance(k, int):
             raise TypeError("Index must be an integer.")
 
-        generator_instance = func()
-        for index_counter, prime in enumerate(generator_instance, start=1):
-            if index_counter == k:
-                return prime
-
-        raise ValueError("Prime number not found at the specified position.")
+        # Мы сохраняем состояние генератора для будущих вызовов
+        generator_instance = func()  # Создаем генератор один раз
+        for _ in range(k - 1):  # Пропускаем первые k-1 простых числа
+            next(generator_instance)  # Перемещение по генератору
+        return next(generator_instance)  # Возвращаем k-ое простое число
 
     return inner
 
@@ -88,4 +82,4 @@ def get_kth_prime_number() -> Generator[int, None, None]:
     Returns:
         Generator[int, None, None]: Generator yielding prime numbers.
     """
-    return prime_number_generator(max_count=1000)
+    return prime_number_generator()
