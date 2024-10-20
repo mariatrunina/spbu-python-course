@@ -20,8 +20,6 @@ def test_example_function_with_evaluated():
     assert result == 7  # 0 + 5 + 2
 
 
-
-
 def test_example_function_with_isolated():
     mutable_dict = {"a": 10}
     result = example_function(c=mutable_dict)
