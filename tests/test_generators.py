@@ -11,6 +11,7 @@ from project.generators import (
     COMBINATION_LIMIT,
 )
 
+
 def test_fetch_rgba_by_index() -> None:
     assert fetch_rgba_by_index(50) == (0, 0, 0, 100)
 
