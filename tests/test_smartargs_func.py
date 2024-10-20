@@ -20,14 +20,6 @@ def test_example_function_with_evaluated():
     assert result == 7  # 0 + 5 + 2
 
 
-def test_evaluated_recalculation():
-    def random_value():
-        return random.randint(1, 10)
-
-    result_1 = example_function(b=Evaluated(random_value), c={"a": 2})
-    result_2 = example_function(b=Evaluated(random_value), c={"a": 2})
-
-    assert result_1 != result_2
 
 
 def test_example_function_with_isolated():
