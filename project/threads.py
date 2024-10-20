@@ -15,7 +15,7 @@ class ThreadPool:
             pool_size (int): The number of threads in the pool.
         """
         self.pool_size = pool_size
-        self.tasks = queue.Queue()
+        self.tasks: queue.Queue[Callable] = queue.Queue()  # Добавлена аннотация типа
         self.threads: List[threading.Thread] = []
         self.is_disposed = False
 
