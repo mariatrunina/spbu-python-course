@@ -2,13 +2,13 @@ import pytest
 import sys
 import os
 
-# Устанавливаем путь, чтобы импортировать ThreadPool
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from project.threads import (
     ThreadPool,
     sample_task,
     compute_sum_with_futures,
-)  # Импортируйте нужные функции и класс
+)  
 
 
 @pytest.fixture
@@ -16,8 +16,7 @@ def thread_pool():
     pool_size = 5
     pool = ThreadPool(pool_size=pool_size)
     yield pool
-    pool.dispose()  # Убедитесь, что пул завершается
-
+    pool.dispose()  
 
 def test_enqueue_task(thread_pool):
     thread_pool.enqueue(sample_task)
