@@ -8,7 +8,7 @@ from project.threads import (
     ThreadPool,
     sample_task,
     compute_sum_with_futures,
-)  
+)
 
 
 @pytest.fixture
@@ -16,7 +16,8 @@ def thread_pool():
     pool_size = 5
     pool = ThreadPool(pool_size=pool_size)
     yield pool
-    pool.dispose()  
+    pool.dispose()
+
 
 def test_enqueue_task(thread_pool):
     thread_pool.enqueue(sample_task)
