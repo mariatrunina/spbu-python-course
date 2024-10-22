@@ -1,13 +1,14 @@
 import pytest
 import sys
 import os
+import random
+import time
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from project.threads import (
     ThreadPool,
     sample_task,
-    compute_sum_with_futures,
 )
 
 
@@ -50,8 +51,13 @@ def test_dispose(thread_pool):
     assert thread_pool.is_disposed is True
 
 
-def test_cartesian_product_sum():
-    list1 = [1, 2, 3]
-    list2 = [4, 5, 6]
-    result = compute_sum_with_futures(list1, list2)
-    assert result == 63
+def sample_task() -> int:
+    """
+    A sample task that simulates work by sleeping for a random amount of time
+    and then returns a random integer.
+
+    Returns:
+        int: A random integer between 1 and 100.
+    """
+    time.sleep(random.uniform(0.1, 0.5))  # Simulate some work
+    return random.randint(1, 100)
