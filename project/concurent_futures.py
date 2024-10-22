@@ -20,6 +20,7 @@ def cartesian_product_sum(list1: List[int], list2: List[int]) -> int:
     product = [(x, y) for x in list1 for y in list2]
     return sum(x + y for x, y in product)
 
+
 def compute_sum_with_futures(list1: List[int], list2: List[int]) -> int:
     """
     Computes the sum of the Cartesian product of two lists using futures.

@@ -7,6 +7,7 @@ from project.concurent_futures import (
     compute_sum_with_futures,
 )
 
+
 def test_cartesian_product_sum():
     list1 = [1, 2, 3]
     list2 = [4, 5, 6]
