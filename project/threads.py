@@ -1,8 +1,4 @@
 import threading
-import queue
-import random
-import time
-import concurrent.futures
 from typing import Callable, List
 
 
@@ -15,43 +11,45 @@ class ThreadPool:
             pool_size (int): The number of threads in the pool.
         """
         self.pool_size = pool_size
-        self.tasks: queue.Queue[Callable] = queue.Queue()
+        self.tasks: List[Callable] = []
+        self.lock = threading.Lock()
         self.threads: List[threading.Thread] = []
         self.is_disposed = False
+        self._init_threads()
 
-        for _ in range(pool_size):
+    def _init_threads(self) -> None:
+        """Initializes the worker threads."""
+        for _ in range(self.pool_size):
             thread = threading.Thread(target=self.worker)
             thread.start()
             self.threads.append(thread)
 
     def worker(self) -> None:
         """
-        The worker function that processes tasks from the queue.
+        The worker function that processes tasks from the tasks list.
         It runs in separate threads and continuously checks for tasks to execute.
         """
         while not self.is_disposed:
-            try:
-                task: Callable = self.tasks.get(
-                    timeout=1
-                )  # Timeout for waiting for a task
-            except queue.Empty:
-                continue
+            with self.lock:
+                if self.tasks:
+                    task = self.tasks.pop(0)
+                else:
+                    task = None
 
-            try:
-                result = task()  # Execute the task
-                print(f"Task completed with result: {result}")
-            finally:
-                self.tasks.task_done()
+            if task is not None:
+
+                task()
 
     def enqueue(self, task: Callable) -> None:
         """
-        Adds a task to the queue. The task should be callable.
+        Adds a task to the tasks list. The task should be callable.
 
         Args:
             task (Callable): The task to be executed by the thread pool.
         """
         if not self.is_disposed:
-            self.tasks.put(task)
+            with self.lock:
+                self.tasks.append(task)
 
     def dispose(self) -> None:
         """
@@ -59,4 +57,4 @@ class ThreadPool:
         """
         self.is_disposed = True
         for thread in self.threads:
-            thread.join()  # Wait for threads to finish
+            thread.join()

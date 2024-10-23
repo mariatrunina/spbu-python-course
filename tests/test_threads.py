@@ -4,11 +4,8 @@ import os
 import random
 import time
 
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from project.threads import (
-    ThreadPool,
-)
+from project.threads import ThreadPool
 
 
 @pytest.fixture
@@ -21,7 +18,7 @@ def thread_pool():
 
 def test_enqueue_task(thread_pool):
     thread_pool.enqueue(sample_task)
-    assert thread_pool.tasks.qsize() == 1
+    assert len(thread_pool.tasks) == 1  # Изменено на len для проверки количества задач
 
 
 def test_thread_count(thread_pool):
@@ -38,10 +35,10 @@ def test_task_completion(thread_pool):
     for _ in range(10):
         thread_pool.enqueue(collect_result)
 
-    thread_pool.tasks.join()
+    # Даем время для выполнения задач
+    time.sleep(2)
 
-    thread_pool.dispose()
-
+    # Проверяем, что все задачи были выполнены
     assert len(results) == 10
 
 
