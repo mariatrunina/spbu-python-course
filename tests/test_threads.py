@@ -1,4 +1,5 @@
 import pytest
+import threading
 import sys
 import os
 import random
@@ -18,11 +19,11 @@ def thread_pool():
 
 def test_enqueue_task(thread_pool):
     thread_pool.enqueue(sample_task)
-    assert len(thread_pool.tasks) == 1  # Изменено на len для проверки количества задач
+    assert len(thread_pool.tasks) == 1
 
 
 def test_thread_count(thread_pool):
-    assert len(thread_pool.threads) == thread_pool.pool_size
+    assert threading.active_count() - 1 == thread_pool.pool_size
 
 
 def test_task_completion(thread_pool):
@@ -35,10 +36,8 @@ def test_task_completion(thread_pool):
     for _ in range(10):
         thread_pool.enqueue(collect_result)
 
-    # Даем время для выполнения задач
     time.sleep(2)
 
-    # Проверяем, что все задачи были выполнены
     assert len(results) == 10
 
 
