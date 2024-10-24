@@ -29,7 +29,6 @@ def test_evaluated_recalculation():
 
     assert result_1 != result_2
 
-
 def test_example_function_with_isolated():
     mutable_dict = {"a": 10}
     result = example_function(c=mutable_dict)
