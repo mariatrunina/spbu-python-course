@@ -95,28 +95,20 @@ class Bot_Hand:
 
 class Bot:
     def __init__(self, name: str, strategy: Callable[["Bot", Deck], bool]) -> None:
-        """
-        Initialize a bot with a name and a strategy.
-
-        Args:
-            name (str): The name of the bot.
-            strategy (Callable): The strategy function for the bot's turn.
-        """
         self.name = name
         self.hand = Bot_Hand()
         self.strategy = strategy
 
     def play(self, deck: Deck) -> None:
-        """
-        Play the bot's turn based on its strategy.
-
-        Args:
-            deck (Deck): The deck from which cards are drawn.
-        """
         while self.strategy(self, deck):
             print(f"{self.name} decides to hit.")
-            self.hand.add_card(deck.deal())
-            print(f"{self.name}'s hand value: {self.hand.calculate_value()}")
+            card = deck.deal()  # Deal a card
+            if card is not None:  # Check if card is not None
+                self.hand.add_card(card)  # Add card to hand
+                print(f"{self.name}'s hand value: {self.hand.calculate_value()}")
+            else:
+                print(f"{self.name} cannot hit, deck is empty.")
+                break
 
 
 class Game:
@@ -148,19 +140,28 @@ class Game:
             self.show_hands()
 
     def play_round(self) -> None:
-        """
-        Play a single round of the game, where all bots take their turns.
-        """
         for bot in self.bots:
-            bot.hand.add_card(self.deck.deal())
-            bot.hand.add_card(self.deck.deal())
+            card1 = self.deck.deal()  # First card
+            if card1 is not None:  # Check if card is not None
+                bot.hand.add_card(card1)
+            else:
+                print(
+                    f"{bot.name} cannot receive more cards. No cards left in the deck."
+                )
+                return
+
+            card2 = self.deck.deal()  # Second card
+            if card2 is not None:  # Check if card is not None
+                bot.hand.add_card(card2)
+            else:
+                print(
+                    f"{bot.name} cannot receive more cards. No cards left in the deck."
+                )
+                return
+
             print(
                 f"{bot.name}'s hand: {[card.rank + ' of ' + card.suit for card in bot.hand.cards]}"
             )
-
-        # Bots play their turns
-        for bot in self.bots:
-            bot.play(self.deck)
 
     def show_hands(self) -> None:
         """
