@@ -207,8 +207,3 @@ class Game:
             bool: Whether to hit (True) or not (False).
         """
         return random.choice([True, False])
-
-
-if __name__ == "__main__":
-    game = Game(max_steps=5)
-    game.start_game()
