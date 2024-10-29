@@ -102,9 +102,9 @@ class Bot:
     def play(self, deck: Deck) -> None:
         while self.strategy(self, deck):
             print(f"{self.name} decides to hit.")
-            card = deck.deal()  # Deal a card
-            if card is not None:  # Check if card is not None
-                self.hand.add_card(card)  # Add card to hand
+            card = deck.deal()
+            if card is not None:
+                self.hand.add_card(card)
                 print(f"{self.name}'s hand value: {self.hand.calculate_value()}")
             else:
                 print(f"{self.name} cannot hit, deck is empty.")
@@ -141,8 +141,8 @@ class Game:
 
     def play_round(self) -> None:
         for bot in self.bots:
-            card1 = self.deck.deal()  # First card
-            if card1 is not None:  # Check if card is not None
+            card1 = self.deck.deal()
+            if card1 is not None:
                 bot.hand.add_card(card1)
             else:
                 print(
@@ -150,8 +150,8 @@ class Game:
                 )
                 return
 
-            card2 = self.deck.deal()  # Second card
-            if card2 is not None:  # Check if card is not None
+            card2 = self.deck.deal()
+            if card2 is not None:
                 bot.hand.add_card(card2)
             else:
                 print(
