@@ -4,7 +4,6 @@ from bothand import BotHand
 
 
 class Bot:
-
     def __init__(
         self, name: str, strategy: Callable[["Bot", Deck, List[int]], bool]
     ) -> None:

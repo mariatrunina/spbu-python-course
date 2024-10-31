@@ -1,11 +1,16 @@
 import pytest
-from io import StringIO
 import sys
 import os
+from typing import Type
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from project.game import Card, Deck, Bot, Game, BotHand, Bet
-from project.game import Strategy
+
+# Импортируем классы из папки project
+from project.game import Card, Bet, Deck
+from project.stragedy import Strategy
+from project.bot import Bot
+from project.bothand import BotHand
+from project.cgame import Game
 
 
 @pytest.fixture
