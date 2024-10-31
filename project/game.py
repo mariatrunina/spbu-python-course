@@ -34,20 +34,20 @@ class Deck:
         """
         Initialize a deck of cards with all possible ranks and suits.
         """
-        self.cards: List[Card] = []
+        self._cards: List[Card] = []  # Приватный атрибут, содержащий карты
         suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
         ranks = [str(n) for n in range(2, 11)] + ["J", "Q", "K", "A"]
 
         # Create a deck of cards
         for suit in suits:
             for rank in ranks:
-                self.cards.append(Card(rank, suit))
+                self._cards.append(Card(rank, suit))
 
     def shuffle(self) -> None:
         """
         Shuffle the deck of cards.
         """
-        random.shuffle(self.cards)
+        random.shuffle(self._cards)
 
     def deal(self) -> Optional[Card]:
         """
@@ -56,15 +56,26 @@ class Deck:
         Returns:
             Card: The card dealt, or None if the deck is empty.
         """
-        return self.cards.pop() if self.cards else None
+        return self._cards.pop() if self._cards else None
 
 
-class Bot_Hand:
+class Bet:
+    def __init__(self, amount: int):
+        """
+        Initialize a bet for a game round.
+
+        Args:
+            amount (int): The amount of the bet.
+        """
+        self.amount = amount
+
+
+class BotHand:
     def __init__(self) -> None:
         """
         Initialize an empty hand for the bot.
         """
-        self.cards: List[Card] = []
+        self._cards: List[Card] = []  # Приватный атрибут, содержащий карты бота
 
     def add_card(self, card: Card) -> None:
         """
@@ -73,7 +84,13 @@ class Bot_Hand:
         Args:
             card (Card): The card to add.
         """
-        self.cards.append(card)
+        self._cards.append(card)
+
+    def reset(self) -> None:
+        """
+        Resets the bot's hand for a new round.
+        """
+        self._cards.clear()
 
     def calculate_value(self) -> int:
         """
@@ -82,8 +99,8 @@ class Bot_Hand:
         Returns:
             int: The calculated value of the hand.
         """
-        value = sum(card.value() for card in self.cards)
-        aces = sum(1 for card in self.cards if card.rank == "A")
+        value = sum(card.value() for card in self._cards)
+        aces = sum(1 for card in self._cards if card.rank == "A")
 
         # Adjust for Aces if necessary
         while value > 21 and aces:
@@ -92,23 +109,124 @@ class Bot_Hand:
 
         return value
 
+    def is_busted(self) -> bool:
+        """
+        Check if the bot has busted (i.e., the hand value is over 21).
+
+        Returns:
+            bool: True if the bot has busted, otherwise False.
+        """
+        return self.calculate_value() > 21
+
 
 class Bot:
-    def __init__(self, name: str, strategy: Callable[["Bot", Deck], bool]) -> None:
+    def __init__(
+        self, name: str, strategy: Callable[["Bot", Deck, List[int]], bool]
+    ) -> None:
+        """
+        Initialize a bot with a name and a strategy for playing.
+
+        Args:
+            name (str): The name of the bot.
+            strategy (Callable[["Bot", Deck, List[int]], bool]): The strategy function for the bot.
+        """
         self.name = name
-        self.hand = Bot_Hand()
-        self.strategy = strategy
+        self.hand = BotHand()
+        self._strategy = strategy
+        self._bet_history: List[int] = []
+        self.current_bet: Optional[Bet] = None
+        self.is_active: bool = True
 
     def play(self, deck: Deck) -> None:
-        while self.strategy(self, deck):
-            print(f"{self.name} decides to hit.")
+        while self._strategy(self, deck, self._bet_history):
             card = deck.deal()
-            if card is not None:
+            if card:
                 self.hand.add_card(card)
-                print(f"{self.name}'s hand value: {self.hand.calculate_value()}")
-            else:
-                print(f"{self.name} cannot hit, deck is empty.")
-                break
+                print(f"Hand value after adding card: {self.hand.calculate_value()}")
+                if self.hand.is_busted():
+                    print(f"Busted! Setting is_active to False.")
+                    self.is_active = False
+                    break
+
+    def place_bet(self, amount: int) -> None:
+        """
+        Place a bet for the bot.
+
+        Args:
+            amount (int): The amount of the bet.
+        """
+        self.current_bet = Bet(amount)
+        self._bet_history.append(amount)
+        print(f"{self.name} placed a bet of {amount}.")
+
+
+class Strategy:
+    @staticmethod
+    def aggressive(bot: Bot, deck: Deck, bet_history: List[int]) -> bool:
+        """
+        Aggressive strategy: Hit if the hand value is less than 17.
+
+        Args:
+            bot (Bot): The bot using this strategy.
+            deck (Deck): The deck of cards being used.
+            bet_history (List[int]): The history of bets made by the bot.
+
+        Returns:
+            bool: Whether to hit (True) or not (False).
+        """
+        return bot.hand.calculate_value() < 17
+
+    @staticmethod
+    def cautious(bot: Bot, deck: Deck, bet_history: List[int]) -> bool:
+        """
+        Cautious strategy: Hit if the hand value is less than 15.
+
+        Args:
+            bot (Bot): The bot using this strategy.
+            deck (Deck): The deck of cards being used.
+            bet_history (List[int]): The history of bets made by the bot.
+
+        Returns:
+            bool: Whether to hit (True) or not (False).
+        """
+        return bot.hand.calculate_value() < 15
+
+    @staticmethod
+    def random(bot: Bot, deck: Deck, bet_history: List[int]) -> bool:
+        """
+        Random strategy: Hit or stand randomly.
+
+        Args:
+            bot (Bot): The bot using this strategy.
+            deck (Deck): The deck of cards being used.
+            bet_history (List[int]): The history of bets made by the bot.
+
+        Returns:
+            bool: Whether to hit (True) or not (False).
+        """
+        return random.choice([True, False])
+
+    @staticmethod
+    def historical_strategy(bot: Bot, deck: Deck, bet_history: List[int]) -> bool:
+        """
+        Strategy considering the bet history:
+        If the last bet was high, stand if the hand value is 17 or greater, otherwise hit.
+        If the last bet was low or nonexistent, follow the aggressive strategy.
+
+        Args:
+            bot (Bot): The bot using this strategy.
+            deck (Deck): The deck of cards being used.
+            bet_history (List[int]): The history of bets made by the bot.
+
+        Returns:
+            bool: Whether to hit (True) or not (False).
+        """
+        if bet_history and bet_history[-1] > 10:  # Пример условия для высоких ставок
+            return (
+                bot.hand.calculate_value() < 17
+            )  # Агрессивная игра на высоких ставках
+        else:
+            return bot.hand.calculate_value() < 15  # Осторожная игра на низких ставках
 
 
 class Game:
@@ -119,29 +237,45 @@ class Game:
         Args:
             max_steps (int): The maximum number of steps to play.
         """
-        self.deck = Deck()
-        self.deck.shuffle()
-        self.bots = [
-            Bot("Bot1", self.aggressive_strategy),
-            Bot("Bot2", self.cautious_strategy),
-            Bot("Bot3", self.random_strategy),
+        self._deck = Deck()  # Приватный атрибут для колоды
+        self._deck.shuffle()
+        self._bots = [
+            Bot("Bot1", Strategy.aggressive),
+            Bot("Bot2", Strategy.cautious),
+            Bot("Bot3", Strategy.random),
+            Bot(
+                "Bot4", Strategy.historical_strategy
+            ),  # Новый бот с исторической стратегией
         ]
-        self.max_steps = max_steps
-        self.current_step = 0
+        self._max_steps = (
+            max_steps  # Приватный атрибут для максимального количества шагов
+        )
+        self._current_step = 0  # Приватный атрибут для текущего шага
 
     def start_game(self) -> None:
         """
         Start the game and control the flow of rounds.
         """
-        while self.current_step < self.max_steps:
-            print(f"\n--- Round {self.current_step + 1} ---")
+        while self._current_step < self._max_steps:
+            print(f"\n--- Round {self._current_step + 1} ---")
             self.play_round()
-            self.current_step += 1
-            self.show_hands()
+            self._current_step += 1
+            self._show_hands()
+            self.reset_bots_hands()  # Обнуляем руки всех ботов после раунда
 
     def play_round(self) -> None:
-        for bot in self.bots:
-            card1 = self.deck.deal()
+        """
+        Play a round, dealing cards to all bots and allowing them to play.
+        """
+        for bot in self._bots:
+            if not bot.is_active:
+                print(f"{bot.name} is out of the game and will not place a bet.")
+                continue
+
+            bet_amount = random.randint(1, 20)  # Генерируем случайную ставку
+            bot.place_bet(bet_amount)  # Бот ставит ставку
+
+            card1 = self._deck.deal()
             if card1 is not None:
                 bot.hand.add_card(card1)
             else:
@@ -150,7 +284,7 @@ class Game:
                 )
                 return
 
-            card2 = self.deck.deal()
+            card2 = self._deck.deal()
             if card2 is not None:
                 bot.hand.add_card(card2)
             else:
@@ -160,51 +294,29 @@ class Game:
                 return
 
             print(
-                f"{bot.name}'s hand: {[card.rank + ' of ' + card.suit for card in bot.hand.cards]}"
+                f"{bot.name}'s hand: {[card.rank + ' of ' + card.suit for card in bot.hand._cards]}"
             )
 
-    def show_hands(self) -> None:
+            # Позволяем боту играть на своем ходу
+            bot.play(self._deck)
+
+            if bot.hand.is_busted():
+                print(
+                    f"{bot.name} busts with value {bot.hand.calculate_value()}. He is out of the game."
+                )
+                bot.is_active = False  # Бот выбывает из игры
+
+    def reset_bots_hands(self):
+        """
+        Reset all bots’ hands for the next round.
+        """
+        for bot in self._bots:
+            bot.hand.reset()
+
+    def _show_hands(self) -> None:
         """
         Display the current hands and values of all bots.
         """
-        for bot in self.bots:
-            print(f"{bot.name}'s hand value: {bot.hand.calculate_value()}")
-
-    def aggressive_strategy(self, bot: Bot, deck: Deck) -> bool:
-        """
-        Aggressive strategy: Hit if the hand value is less than 17.
-
-        Args:
-            bot (Bot): The bot using this strategy.
-            deck (Deck): The deck of cards being used.
-
-        Returns:
-            bool: Whether to hit (True) or not (False).
-        """
-        return bot.hand.calculate_value() < 17
-
-    def cautious_strategy(self, bot: Bot, deck: Deck) -> bool:
-        """
-        Cautious strategy: Hit if the hand value is less than 15.
-
-        Args:
-            bot (Bot): The bot using this strategy.
-            deck (Deck): The deck of cards being used.
-
-        Returns:
-            bool: Whether to hit (True) or not (False).
-        """
-        return bot.hand.calculate_value() < 15
-
-    def random_strategy(self, bot: Bot, deck: Deck) -> bool:
-        """
-        Random strategy: Hit or stand randomly.
-
-        Args:
-            bot (Bot): The bot using this strategy.
-            deck (Deck): The deck of cards being used.
-
-        Returns:
-            bool: Whether to hit (True) or not (False).
-        """
-        return random.choice([True, False])
+        for bot in self._bots:
+            if bot.is_active:
+                print(f"{bot.name}'s hand value: {bot.hand.calculate_value()}")

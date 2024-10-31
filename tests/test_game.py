@@ -4,99 +4,160 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from project.game import Card, Deck, Bot_Hand, Bot, Game
+from project.game import Card, Deck, Bot, Game, BotHand, Bet
+from project.game import Strategy
 
 
 @pytest.fixture
 def setup_game():
-
     deck = Deck()
     game = Game(max_steps=1)
     return deck, game
 
 
 def test_deck_initialization(setup_game):
-
     deck, _ = setup_game
-    assert len(deck.cards) == 52
+    assert len(deck._cards) == 52
 
 
 def test_deck_shuffle(setup_game):
-
     deck, _ = setup_game
-    original_deck = deck.cards.copy()
+    original_deck = deck._cards.copy()
     deck.shuffle()
-    assert original_deck != deck.cards
+    assert original_deck != deck._cards
 
 
 def test_dealing_cards(setup_game):
-
     deck, _ = setup_game
-    initial_count = len(deck.cards)
+    initial_count = len(deck._cards)
     dealt_card = deck.deal()
-    assert len(deck.cards) == initial_count - 1
+    assert len(deck._cards) == initial_count - 1
     assert dealt_card is not None
 
 
 def test_bot_hand_initialization(setup_game):
-
     _, game = setup_game
-    bot = Bot("TestBot", game.aggressive_strategy)
-    assert len(bot.hand.cards) == 0
+    bot = Bot("TestBot", Strategy.aggressive)
+    assert len(bot.hand._cards) == 0
 
 
 def test_bot_add_card(setup_game):
-    deck, game = setup_game  # Добавьте это, чтобы получить доступ к переменной game
-    bot = Bot("TestBot", game.aggressive_strategy)
+    deck, game = setup_game
+    bot = Bot("TestBot", Strategy.aggressive)
     card = deck.deal()
     bot.hand.add_card(card)
-    assert len(bot.hand.cards) == 1
+    assert len(bot.hand._cards) == 1
 
 
 def test_calculate_hand_value(setup_game):
-
     _, game = setup_game
-    bot = Bot("TestBot", game.aggressive_strategy)
-    bot.hand.add_card(Card("A", "Hearts"))  # Ace
-    bot.hand.add_card(Card("K", "Diamonds"))  # King
+    bot = Bot("TestBot", Strategy.aggressive)
+    bot.hand.add_card(Card("A", "Hearts"))
+    bot.hand.add_card(Card("K", "Diamonds"))
     value = bot.hand.calculate_value()
-    assert value == 21  # Ace counts as 11 and King counts as 10
+    assert value == 21
 
 
 def test_aggressive_strategy(setup_game):
     deck, game = setup_game
-    bot = Bot("AggressiveBot", game.aggressive_strategy)
+    bot = Bot("AggressiveBot", Strategy.aggressive)
     bot.hand.add_card(Card("10", "Hearts"))
-    assert bot.strategy(bot, deck) is True
+    assert bot._strategy(bot, deck, bot._bet_history) is True
     bot.hand.add_card(Card("6", "Diamonds"))
-    assert bot.strategy(bot, deck) is True
+    assert bot._strategy(bot, deck, bot._bet_history) is True
     bot.hand.add_card(Card("5", "Clubs"))
-    assert bot.strategy(bot, deck) is False
+    assert bot._strategy(bot, deck, bot._bet_history) is False
 
 
 def test_game_round(setup_game):
     deck, game = setup_game
-    initial_deck_size = len(deck.cards)
+    initial_deck_size = len(deck._cards)
     game.start_game()
     expected_min_cards_left = initial_deck_size - 6
-    assert len(game.deck.cards) >= expected_min_cards_left - 2
+    assert len(deck._cards) >= expected_min_cards_left - 2
 
 
 def test_show_hands(setup_game):
-
     _, game = setup_game
     try:
-        game.show_hands()
+        game._show_hands()
     except Exception as e:
-        pytest.fail(f"show_hands raised {type(e).__name__} unexpectedly!")
+        pytest.fail(f"_show_hands raised {type(e).__name__} unexpectedly!")
 
 
 def test_game_state_change(setup_game):
-
     _, game = setup_game
-    initial_step = game.current_step
+    initial_step = game._current_step
     game.start_game()
-    assert game.current_step > initial_step
+    assert game._current_step > initial_step
+
+
+def test_bet_initialization():
+    bet = Bet(10)
+    assert bet.amount == 10
+
+
+def test_bot_hand_reset():
+    hand = BotHand()
+    hand.add_card(Card("A", "Hearts"))
+    hand.add_card(Card("5", "Diamonds"))
+    assert hand.calculate_value() == 16
+    hand.reset()
+    assert hand.calculate_value() == 0
+
+
+def test_is_busted():
+    hand = BotHand()
+    hand.add_card(Card("K", "Hearts"))
+    hand.add_card(Card("Q", "Diamonds"))
+    hand.add_card(Card("2", "Clubs"))
+    assert hand.is_busted() is True
+
+
+def test_betting_system(setup_game):
+    deck, game = setup_game
+    bot = game._bots[0]
+
+    # Убедимся, что бот может ставить ставку
+    initial_bet = 10
+    bot.place_bet(initial_bet)
+    assert bot.current_bet is not None
+    assert bot.current_bet.amount == initial_bet
+
+
+def test_multiple_bets_each_round(setup_game):
+    deck, game = setup_game
+    bot = game._bots[0]
+
+    bot.place_bet(10)
+    assert bot.current_bet.amount == 10
+
+    bot.place_bet(15)
+    assert bot.current_bet.amount == 15
+
+
+def test_bots_random_strategy(setup_game):
+    deck, game = setup_game
+    bot = Bot("RandomBot", Strategy.random)
+
+    initial_hand_value = bot.hand.calculate_value()
+    bot.play(deck)
+    new_hand_value = bot.hand.calculate_value()
+
+    assert new_hand_value == initial_hand_value or new_hand_value < 22
+
+
+def test_bot_hand_resets_between_rounds(setup_game):
+    deck, game = setup_game
+    bot = game._bots[0]
+
+    bot.place_bet(10)
+    bot.hand.add_card(Card("A", "Hearts"))
+    bot.hand.add_card(Card("5", "Diamonds"))
+
+    assert bot.hand.calculate_value() == 16  # Проверяем значение до сброса
+    game.reset_bots_hands()  # Сбрасываем руки после раунда
+    assert bot.hand.calculate_value() == 0  # Проверяем значение после сброса
 
 
 if __name__ == "__main__":
