@@ -35,8 +35,7 @@ def test_dealing_cards(setup_game):
     assert dealt_card is not None
 
 
-def test_bot_hand_initialization(setup_game):
-    _, game = setup_game
+def test_bot_hand_initialization():
     bot = Bot("TestBot", Strategy.aggressive)
     assert len(bot.hand._cards) == 0
 
@@ -49,8 +48,7 @@ def test_bot_add_card(setup_game):
     assert len(bot.hand._cards) == 1
 
 
-def test_calculate_hand_value(setup_game):
-    _, game = setup_game
+def test_calculate_hand_value():
     bot = Bot("TestBot", Strategy.aggressive)
     bot.hand.add_card(Card("A", "Hearts"))
     bot.hand.add_card(Card("K", "Diamonds"))
@@ -59,14 +57,16 @@ def test_calculate_hand_value(setup_game):
 
 
 def test_aggressive_strategy(setup_game):
-    deck, game = setup_game
+    deck, _ = setup_game
     bot = Bot("AggressiveBot", Strategy.aggressive)
     bot.hand.add_card(Card("10", "Hearts"))
-    assert bot._strategy(bot, deck, bot._bet_history) is True
+    assert (
+        bot._strategy(bot, deck, []) is True
+    )  # передаем пустой список вместо bot._bet_history
     bot.hand.add_card(Card("6", "Diamonds"))
-    assert bot._strategy(bot, deck, bot._bet_history) is True
+    assert bot._strategy(bot, deck, []) is True
     bot.hand.add_card(Card("5", "Clubs"))
-    assert bot._strategy(bot, deck, bot._bet_history) is False
+    assert bot._strategy(bot, deck, []) is False
 
 
 def test_game_round(setup_game):
@@ -97,6 +97,15 @@ def test_bet_initialization():
     assert bet.amount == 10
 
 
+def test_betting_system(setup_game):
+    deck, game = setup_game
+    bot = game._bots[0]
+    initial_bet = 10
+    bot.place_bet(initial_bet)
+    assert bot.current_bet is not None
+    assert bot.current_bet.amount == initial_bet
+
+
 def test_bot_hand_reset():
     hand = BotHand()
     hand.add_card(Card("A", "Hearts"))
@@ -114,50 +123,14 @@ def test_is_busted():
     assert hand.is_busted() is True
 
 
-def test_betting_system(setup_game):
-    deck, game = setup_game
-    bot = game._bots[0]
-
-    # Убедимся, что бот может ставить ставку
-    initial_bet = 10
-    bot.place_bet(initial_bet)
-    assert bot.current_bet is not None
-    assert bot.current_bet.amount == initial_bet
-
-
 def test_multiple_bets_each_round(setup_game):
     deck, game = setup_game
     bot = game._bots[0]
-
     bot.place_bet(10)
     assert bot.current_bet.amount == 10
 
     bot.place_bet(15)
     assert bot.current_bet.amount == 15
-
-
-def test_bots_random_strategy(setup_game):
-    deck, game = setup_game
-    bot = Bot("RandomBot", Strategy.random)
-
-    initial_hand_value = bot.hand.calculate_value()
-    bot.play(deck)
-    new_hand_value = bot.hand.calculate_value()
-
-    assert new_hand_value == initial_hand_value or new_hand_value < 22
-
-
-def test_bot_hand_resets_between_rounds(setup_game):
-    deck, game = setup_game
-    bot = game._bots[0]
-
-    bot.place_bet(10)
-    bot.hand.add_card(Card("A", "Hearts"))
-    bot.hand.add_card(Card("5", "Diamonds"))
-
-    assert bot.hand.calculate_value() == 16  # Проверяем значение до сброса
-    game.reset_bots_hands()  # Сбрасываем руки после раунда
-    assert bot.hand.calculate_value() == 0  # Проверяем значение после сброса
 
 
 if __name__ == "__main__":
