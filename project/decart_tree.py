@@ -5,7 +5,7 @@ from typing import Optional, Iterator, Any
 
 class Node:
     """A Node in the Cartesian Tree.
-    
+
     Attributes:
         key (Any): The key of the node.
         value (Any): The value associated with the key.
@@ -13,10 +13,10 @@ class Node:
         left (Optional[Node]): The left child of the node.
         right (Optional[Node]): The right child of the node.
     """
-    
+
     def __init__(self, key: Any, value: Any) -> None:
         """Initialize a Node with a key and a value.
-        
+
         Args:
             key (Any): The key for this node.
             value (Any): The value associated with the key of this node.
@@ -30,8 +30,8 @@ class Node:
 
 class CartesianTree(MutableMapping):
     """A MutableMapping implementation using a Cartesian Tree.
-    
-    This class supports the standard mapping operations: __getitem__, 
+
+    This class supports the standard mapping operations: __getitem__,
     __setitem__, __delitem__, __iter__, __contains__, and __len__.
     """
 
@@ -41,9 +41,9 @@ class CartesianTree(MutableMapping):
 
     def __setitem__(self, key: Any, value: Any) -> None:
         """Set the value for a key in the tree.
-        
+
         If the key already exists, update its value. Otherwise, insert a new key-value pair.
-        
+
         Args:
             key (Any): The key to insert or update.
             value (Any): The value to associate with the key.
@@ -52,12 +52,12 @@ class CartesianTree(MutableMapping):
 
     def _insert(self, node: Optional[Node], key: Any, value: Any) -> Node:
         """Insert a key-value pair into the subtree rooted at the specified node.
-        
+
         Args:
             node (Optional[Node]): The root of the subtree.
             key (Any): The key to insert or update.
             value (Any): The value to associate with the key.
-        
+
         Returns:
             Node: The new root of the subtree after insertion.
         """
@@ -74,15 +74,15 @@ class CartesianTree(MutableMapping):
                 node = self._rotate_left(node)
         else:
             node.value = value  # Update existing key
-        
+
         return node
 
     def _rotate_right(self, node: Node) -> Node:
         """Perform a right rotation on the specified node.
-        
+
         Args:
             node (Node): The node to rotate right.
-        
+
         Returns:
             Node: The new root of the rotated subtree.
         """
@@ -95,10 +95,10 @@ class CartesianTree(MutableMapping):
 
     def _rotate_left(self, node: Node) -> Node:
         """Perform a left rotation on the specified node.
-        
+
         Args:
             node (Node): The node to rotate left.
-        
+
         Returns:
             Node: The new root of the rotated subtree.
         """
@@ -111,13 +111,13 @@ class CartesianTree(MutableMapping):
 
     def __getitem__(self, key: Any) -> Any:
         """Get the value associated with a key in the tree.
-        
+
         Args:
             key (Any): The key to retrieve.
-        
+
         Returns:
             Any: The value associated with the key.
-        
+
         Raises:
             KeyError: If the key is not found in the tree.
         """
@@ -128,11 +128,11 @@ class CartesianTree(MutableMapping):
 
     def _find(self, node: Optional[Node], key: Any) -> Optional[Any]:
         """Find the value associated with a key in the subtree rooted at the specified node.
-        
+
         Args:
             node (Optional[Node]): The root of the subtree.
             key (Any): The key to find.
-        
+
         Returns:
             Optional[Any]: The value associated with the key or None if not found.
         """
@@ -147,10 +147,10 @@ class CartesianTree(MutableMapping):
 
     def __delitem__(self, key: Any) -> None:
         """Delete the key-value pair associated with the key in the tree.
-        
+
         Args:
             key (Any): The key to delete.
-        
+
         Raises:
             KeyError: If the key is not found in the tree.
         """
@@ -158,14 +158,14 @@ class CartesianTree(MutableMapping):
 
     def _delete(self, node: Optional[Node], key: Any) -> Optional[Node]:
         """Delete a key-value pair from the subtree rooted at the specified node.
-        
+
         Args:
             node (Optional[Node]): The root of the subtree.
             key (Any): The key to delete.
-        
+
         Returns:
             Optional[Node]: The new root of the subtree after deletion.
-        
+
         Raises:
             KeyError: If the key is not found to delete.
         """
@@ -187,12 +187,12 @@ class CartesianTree(MutableMapping):
             else:
                 node = self._rotate_left(node)
                 node.left = self._delete(node.left, key)
-        
+
         return node
 
     def __iter__(self) -> Iterator[Any]:
         """Return an iterator for the keys of the tree in sorted order.
-        
+
         Yields:
             Iterator[Any]: An iterator for the keys in sorted order.
         """
@@ -200,10 +200,10 @@ class CartesianTree(MutableMapping):
 
     def _in_order(self, node: Optional[Node]) -> Iterator[Any]:
         """Perform an in-order traversal of the subtree rooted at the specified node.
-        
+
         Args:
             node (Optional[Node]): The root of the subtree.
-        
+
         Yields:
             Iterator[Any]: The keys of the nodes in in-order.
         """
@@ -214,7 +214,7 @@ class CartesianTree(MutableMapping):
 
     def __len__(self) -> int:
         """Return the number of key-value pairs in the tree.
-        
+
         Returns:
             int: The number of elements in the tree.
         """
@@ -222,10 +222,10 @@ class CartesianTree(MutableMapping):
 
     def _count_nodes(self, node: Optional[Node]) -> int:
         """Count the number of nodes in the subtree rooted at the specified node.
-        
+
         Args:
             node (Optional[Node]): The root of the subtree.
-        
+
         Returns:
             int: The number of nodes in the subtree.
         """
@@ -235,10 +235,10 @@ class CartesianTree(MutableMapping):
 
     def __contains__(self, key: Any) -> bool:
         """Check if a key exists in the tree.
-        
+
         Args:
             key (Any): The key to check.
-        
+
         Returns:
             bool: True if the key exists, False otherwise.
         """
@@ -246,8 +246,8 @@ class CartesianTree(MutableMapping):
 
     def __repr__(self) -> str:
         """Return a string representation of the Cartesian Tree.
-        
+
         Returns:
             str: A string representation of the Cartesian Tree.
         """
-        return f'CartesianTree({list(self)})'
+        return f"CartesianTree({list(self)})"
