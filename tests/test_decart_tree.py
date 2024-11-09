@@ -9,7 +9,6 @@ from project.decart_tree import CartesianTree
 
 @pytest.fixture
 def tree():
-    """Fixture to create a Cartesian tree for tests."""
     return CartesianTree()
 
 
@@ -51,3 +50,27 @@ def test_iter(tree):
     tree["key2"] = "value2"
     tree["key3"] = "value3"
     assert list(iter(tree)) == ["key1", "key2", "key3"]
+
+
+def test_contains(tree):
+    tree["key1"] = "value1"
+    assert "key1" in tree
+    assert "non_existing_key" not in tree
+
+
+def test_reverse_order_traversal(tree):
+    tree["key1"] = "value1"
+    tree["key3"] = "value3"
+    tree["key2"] = "value2"
+    assert list(tree._in_order(tree.root)) == ["key1", "key2", "key3"]
+
+
+def test_mutable_mapping_methods(tree):
+    tree["key1"] = "value1"
+    assert len(tree) == 1
+    assert tree["key1"] == "value1"
+    assert "key1" in tree
+    assert "non_existing_key" not in tree
+    del tree["key1"]
+    assert len(tree) == 0
+    assert "key1" not in tree
