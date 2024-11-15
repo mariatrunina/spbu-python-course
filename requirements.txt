@@ -1,4 +1,9 @@
 black
+jupyter
+matplotlib
 mypy
+pandas
+plotly
 pre-commit
 pytest
+seaborn
