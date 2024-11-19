@@ -2,3 +2,6 @@ black
 mypy
 pre-commit
 pytest
+pandas
+numpy
+sklearn
