@@ -1,7 +1,7 @@
 black
 mypy
+numpy
+pandas
 pre-commit
 pytest
-pandas
-numpy
 sklearn
