@@ -24,12 +24,10 @@ def test_evaluated_recalculation():
     def random_value():
         return random.randint(1, 10)
 
-    result_1 = example_function(
-        b=Evaluated(lambda: random)
-    )  # Генерируем случайное значение для второй функции
+    result_1 = example_function(b=Evaluated(lambda: random_value()), c={"a": 1})
     result_2 = example_function(b=Evaluated(lambda: random_value()), c={"a": 2})
 
-    print(f"Result 1: {result_1}, Result 2: {result_2}")  # Вывод для отладки
+    print(f"Result 1: {result_1}, Result 2: {result_2}")
     assert result_1 != result_2, "Results should be different, but they're the same."
 
 
